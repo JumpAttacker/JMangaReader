@@ -4,48 +4,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:JMangaReader.Views;assembly=JMangaReader"
+             xmlns:generic="clr-namespace:System.Collections.Generic;assembly=netstandard"
+             xmlns:scrapperEngine="clr-namespace:JMangaReader.ScrapperEngine;assembly=JMangaReader"
              mc:Ignorable="d"
-             x:Class="JMangaReader.Views.ChapterSelector">
+             x:Class="JMangaReader.Views.ChapterSelector"
+             x:DataType="views:ChapterSelectorViewModel"
+             >
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Сортировать" />
     </ContentPage.ToolbarItems>
-
-    <ListView x:Name="MyListView"
-              ItemsSource="{Binding Items}"
-              ItemTapped="Handle_ItemTapped"
-              CachingStrategy="RecycleElement">
-        <d:ListView.ItemsSource>
-            <x:Array Type="{x:Type x:String}">
-                <x:String>Chapter 1</x:String>
-                <x:String>Chapter 2</x:String>
-                <x:String>Chapter 3</x:String>
-                <x:String>Chapter 4</x:String>
-                <x:String>Chapter 5</x:String>
-            </x:Array>
-        </d:ListView.ItemsSource>
-        <!--Built in Cells-->
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <TextCell Text="{Binding .}" d:Text="{Binding .}" />
-            </DataTemplate>
-        </ListView.ItemTemplate>
-
-        <!--Custom View Cells-->
-        <!--
-    <ListView.ItemTemplate>
-      <DataTemplate>
-        <ViewCell>
-          <StackLayout>
-            <Label Text="{Binding Text}" 
-                   d:Text="{Binding .}"
-                   Style="{DynamicResource ListItemTextStyle}" />
-            <Label Text="{Binding Detail}" 
-                   d:Text="Detail"
-                   Style="{DynamicResource ListItemDetailTextStyle}"/>
-          </StackLayout>
-        </ViewCell>
-      </DataTemplate>
-    </ListView.ItemTemplate>
-    -->
-    </ListView>
+    <StackLayout>
+        <Label Text="{Binding ChapterCountText}"/>
+        <ListView ItemsSource="{Binding Chapters}"
+                  ItemTapped="Handle_ItemTapped"
+                  CachingStrategy="RecycleElement">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="scrapperEngine:IChapter">
+                    <TextCell Text="{Binding ChapterName}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
 </ContentPage>

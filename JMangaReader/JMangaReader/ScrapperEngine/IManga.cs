@@ -6,10 +6,13 @@ namespace JMangaReader.ScrapperEngine
 {
     public interface IManga
     {
-        string Name { get; set; }
+        string MangaName { get; set; }
+        string GetDisplayName { get; }
         string Url { get; set; }
+        string ImageUrl { get; set; }
         List<IChapter> Chapters { get; set; }
         int CountOfChapters { get; }
-        Task<IList<IChapter>> LoadChaptersAsync();
+        Task<IList<IChapter>> LoadChaptersListAsync(bool firstTime = true);
+        
     }
 }

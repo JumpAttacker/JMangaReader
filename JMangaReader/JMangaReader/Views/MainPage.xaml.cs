@@ -21,7 +21,7 @@ namespace JMangaReader.Views
 
             MasterBehavior = MasterBehavior.Popover;
 
-            _menuPages.Add((int)MenuItemType.Browse, (NavigationPage)Detail);
+            _menuPages.Add((int)MenuItemType.MangaSelectorView, (NavigationPage)Detail);
         }
 
         public async Task NavigateFromMenu(MenuItemType type)

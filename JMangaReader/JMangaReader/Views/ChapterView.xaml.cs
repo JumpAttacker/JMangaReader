@@ -150,14 +150,14 @@ namespace JMangaReader.Views
                 return;
             var data = await new WebClient().DownloadDataTaskAsync(imageUrl);
             var fileService = DependencyService.Get<IFileService>();
-            fileService.SavePicture($"{Chapter.ChapterName}_{0}.jpg", data, Chapter.Manga.Name);
+            fileService.SavePicture($"{Chapter.ChapterName}_{0}.jpg", data, Chapter.Manga.MangaName);
             for (var i = 0; i < Left; i++)
             {
                 await Browser.EvaluateJavaScriptAsync("document.getElementById('mangaPicture').click()");
                 imageUrl = await Browser.EvaluateJavaScriptAsync(
                     "Array.from(document.body.querySelectorAll('#mangaPicture')).map(a => a.src)[0];");
                 data = await new WebClient().DownloadDataTaskAsync(imageUrl);
-                fileService.SavePicture($"{Chapter.ChapterName}_{i + 1}.jpg", data, Chapter.Manga.Name);
+                fileService.SavePicture($"{Chapter.ChapterName}_{i + 1}.jpg", data, Chapter.Manga.MangaName);
                 ViewModel.Images.Add(new ImageUrl(imageUrl));
                 ViewModel.LoadedImages++;
                 await Task.Delay(15);

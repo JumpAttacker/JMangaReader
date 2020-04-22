@@ -12,7 +12,7 @@ namespace JMangaReader.ScrapperEngine
     public class ReadMangaScrapper : IScrapper
     {
         private WebView _webView;
-        private string _baseUrl = "https://readmanga.me/";
+        private const string BaseUrl = "https://readmanga.me/";
         public IManga SelectedManga { get; set; }
 
         public void SetWebView(WebView newWebView)
@@ -28,31 +28,38 @@ namespace JMangaReader.ScrapperEngine
         public async Task<IList<Manga>> Search(string args)
         {
             var client = new HttpClient();
-            var response = await client.PostAsync(_baseUrl + "search?q=" + args, null);
+            var response = await client.PostAsync(BaseUrl + "search?q=" + args, null);
             if (response.StatusCode != HttpStatusCode.OK) return null;
             var html = await response.Content.ReadAsStringAsync();
             var document = new HtmlDocument();
             document.LoadHtml(html);
             // var results = document.GetElementbyId("mangaResults");
             var docNode = document.DocumentNode;
-            var descriptions = docNode.Descendants("div").Where(x => x.HasClass("desc"));
-            var mangaLinks = descriptions
+            var tiles = docNode.Descendants("div").Where(x => x.HasClass("tile"));
+            var data = tiles.Select(x => new
+            {
+                description = x.Descendants("div").FirstOrDefault(d => d.HasClass("desc")),
+                image = x.Descendants("img").FirstOrDefault()
+            });
+            // var descriptions = docNode.Descendants("div").Where(x => x.HasClass("desc"));
+            var mangaLinks = data
                 .Select(x => new
                 {
-                    h3 = x.Descendants("h3").First(),
-                    h4 = x.Descendants("h4").FirstOrDefault()
+                    h3 = x.description.Descendants("h3").First(),
+                    h4 = x.description.Descendants("h4").FirstOrDefault(),
+                    imageUrl = x.image != null ? x.image.GetAttributeValue("data-original", string.Empty) : string.Empty
                 }).Select(x =>
                     new Manga(
                         $"{x.h3.InnerText} {(x.h4 != null ? $"({x.h4.InnerText})" : string.Empty)}",
-                        x.h3.Descendants("a").First().GetAttributeValue("href", string.Empty)));
-            return mangaLinks.ToList();
+                        x.h3.Descendants("a").First().GetAttributeValue("href", string.Empty), x.imageUrl));
+            return mangaLinks.Where(x=>x.Url.StartsWith("/") || x.Url.StartsWith("https://mintmanga.live/")).ToList();
         }
 
         public async Task<bool> SelectManga(IManga manga)
         {
             SelectedManga = manga;
-            var chapters = await SelectedManga.LoadChaptersAsync();
-            return chapters?.Count>0;
+            var chapters = await SelectedManga.LoadChaptersListAsync();
+            return chapters?.Count > 0;
         }
     }
 }

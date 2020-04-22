@@ -32,27 +32,6 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-                <!-- <ListView x:Name="ListView" ItemsSource="{Binding ImagesObservableCollection}" -->
-                <!--           HasUnevenRows="True" -->
-                <!--           CachingStrategy="RetainElement" -->
-                <!--           ItemSelected="OnItemSelected"> -->
-                <!--     <ListView.ItemTemplate> -->
-                <!--         <DataTemplate> -->
-                <!--             <ViewCell> -->
-                <!--                 <views:ImageFit Source="{Binding Url}" BackgroundColor="#000000"/> -->
-                <!--                 ~1~ <forms:CachedImage Source="{Binding Url}" @1@ -->
-                <!--                 ~1~                    CacheDuration="1" @1@ -->
-                <!--                 ~1~                    DownloadProgress="CachedImage_OnDownloadProgress" /> @1@ -->
-                <!--                 ~1~ <views:ImageEx @1@ -->
-                <!--                 ~1~     HorizontalOptions="Fill" @1@ -->
-                <!--                 ~1~     VerticalOptions="Fill" @1@ -->
-                <!--                 ~1~     Aspect="Fill" @1@ -->
-                <!--                 ~1~     Source="{Binding Url}" @1@ -->
-                <!--                 ~1~     /> @1@ -->
-                <!--             </ViewCell> -->
-                <!--         </DataTemplate> -->
-                <!--     </ListView.ItemTemplate> -->
-                <!-- </ListView> -->
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

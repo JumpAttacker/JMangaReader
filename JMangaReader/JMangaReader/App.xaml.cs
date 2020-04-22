@@ -1,4 +1,6 @@
 using System;
+using System.Reactive.Linq;
+using Akavache;
 using JMangaReader.ScrapperEngine;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -19,6 +21,8 @@ namespace JMangaReader
             InitializeComponent();
 
             MainPage = new MainPage();
+
+            Registrations.Start("JMangaParser");
         }
 
         protected override void OnStart()

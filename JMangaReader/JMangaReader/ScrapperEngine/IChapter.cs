@@ -9,5 +9,9 @@ namespace JMangaReader.ScrapperEngine
         bool Downloaded { get; set; }
         List<IPage> Pages { get; set; }
         IManga Manga { get; set; }
+        bool IsWatch { get; set; }
+        void Load();
+        void Save(bool value);
+
     }
 }
