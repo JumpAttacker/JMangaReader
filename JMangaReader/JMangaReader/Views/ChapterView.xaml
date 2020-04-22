@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:JMangaReader.Views;assembly=JMangaReader"
+             xmlns:forms="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             mc:Ignorable="d"
+             NavigationPage.HasNavigationBar="false"
+             x:Class="JMangaReader.Views.ChapterView">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="ShowBrowser" Clicked="MenuItem_OnClicked" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout>
+                <ProgressBar HeightRequest="10" Progress="{Binding GetProgressBar}" IsVisible="{Binding IsBusy}" Margin="0"/>
+                <Label Text="{Binding GetLoadingText}"></Label>
+                <WebView x:Name="Browser" IsVisible="False" WidthRequest="400" HeightRequest="400"/>
+                <CollectionView x:Name="CollectionView" ItemsSource="{Binding Items}" SelectionChanged="CollectionView_OnSelectionChanged" SelectionMode="Single">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <!-- <Grid> -->
+                                <views:ImageFit Source="{Binding Url}">
+                                    <views:ImageFit.GestureRecognizers>
+                                        <SwipeGestureRecognizer Direction="Right" Swiped="SwipeGestureRecognizer_OnSwiped"/>
+                                        <SwipeGestureRecognizer Direction="Left" Swiped="SwipeGestureRecognizer_OnSwiped"/>
+                                    </views:ImageFit.GestureRecognizers>
+                            </views:ImageFit>
+                                    <!-- </Grid> -->
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <!-- <ListView x:Name="ListView" ItemsSource="{Binding ImagesObservableCollection}" -->
+                <!--           HasUnevenRows="True" -->
+                <!--           CachingStrategy="RetainElement" -->
+                <!--           ItemSelected="OnItemSelected"> -->
+                <!--     <ListView.ItemTemplate> -->
+                <!--         <DataTemplate> -->
+                <!--             <ViewCell> -->
+                <!--                 <views:ImageFit Source="{Binding Url}" BackgroundColor="#000000"/> -->
+                <!--                 ~1~ <forms:CachedImage Source="{Binding Url}" @1@ -->
+                <!--                 ~1~                    CacheDuration="1" @1@ -->
+                <!--                 ~1~                    DownloadProgress="CachedImage_OnDownloadProgress" /> @1@ -->
+                <!--                 ~1~ <views:ImageEx @1@ -->
+                <!--                 ~1~     HorizontalOptions="Fill" @1@ -->
+                <!--                 ~1~     VerticalOptions="Fill" @1@ -->
+                <!--                 ~1~     Aspect="Fill" @1@ -->
+                <!--                 ~1~     Source="{Binding Url}" @1@ -->
+                <!--                 ~1~     /> @1@ -->
+                <!--             </ViewCell> -->
+                <!--         </DataTemplate> -->
+                <!--     </ListView.ItemTemplate> -->
+                <!-- </ListView> -->
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>
