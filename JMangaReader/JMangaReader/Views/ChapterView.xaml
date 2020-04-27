@@ -8,31 +8,43 @@
              xmlns:forms="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              mc:Ignorable="d"
              NavigationPage.HasNavigationBar="false"
-             x:Class="JMangaReader.Views.ChapterView">
+             x:Class="JMangaReader.Views.ChapterView"
+             x:DataType="views:ChapterViewModel">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="ShowBrowser" Clicked="MenuItem_OnClicked" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <ScrollView>
-            <StackLayout>
-                <ProgressBar HeightRequest="10" Progress="{Binding GetProgressBar}" IsVisible="{Binding IsBusy}" Margin="0"/>
-                <Label Text="{Binding GetLoadingText}"></Label>
-                <WebView x:Name="Browser" IsVisible="False" WidthRequest="400" HeightRequest="400"/>
-                <CollectionView x:Name="CollectionView" ItemsSource="{Binding Items}" SelectionChanged="CollectionView_OnSelectionChanged" SelectionMode="Single">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <!-- <Grid> -->
-                                <views:ImageFit Source="{Binding Url}">
-                                    <views:ImageFit.GestureRecognizers>
-                                        <SwipeGestureRecognizer Direction="Right" Swiped="SwipeGestureRecognizer_OnSwiped"/>
-                                        <SwipeGestureRecognizer Direction="Left" Swiped="SwipeGestureRecognizer_OnSwiped"/>
-                                    </views:ImageFit.GestureRecognizers>
-                            </views:ImageFit>
-                                    <!-- </Grid> -->
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </StackLayout>
-        </ScrollView>
+        <!-- <ScrollView> -->
+        <StackLayout>
+            <ProgressBar HeightRequest="10" Progress="{Binding GetProgressBar}" IsVisible="{Binding IsBusy}" Margin="0" />
+            <Label Text="{Binding GetLoadingText}" />
+            <WebView x:Name="Browser" IsVisible="False" WidthRequest="400" HeightRequest="400" />
+            <CollectionView x:Name="CollectionView" ItemsSource="{Binding Images}"
+                            SelectionChanged="CollectionView_OnSelectionChanged" SelectionMode="Single"
+                            Scrolled="CollectionView_OnScrolled">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="views:ImageUrl">
+                        <!-- <Grid> -->
+                        <views:ImageFit Source="{Binding Url}">
+                            <views:ImageFit.GestureRecognizers>
+                                <SwipeGestureRecognizer Direction="Right" Swiped="SwipeGestureRecognizer_OnSwiped" />
+                                <SwipeGestureRecognizer Direction="Left" Swiped="SwipeGestureRecognizer_OnSwiped" />
+                            </views:ImageFit.GestureRecognizers>
+                        </views:ImageFit>
+                        <!-- </Grid> -->
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Grid x:Name="ButtonsLayout" VerticalOptions="Start" HorizontalOptions="FillAndExpand">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" HorizontalOptions="FillAndExpand" Text="Previous" Clicked="BackButtonClick"/>
+                <Button Grid.Column="2" HorizontalOptions="FillAndExpand" Text="Next" WidthRequest="200"  Clicked="NextButtonClick"/>
+            </Grid>
+        </StackLayout>
+        <!-- </ScrollView> -->
     </ContentPage.Content>
 </ContentPage>

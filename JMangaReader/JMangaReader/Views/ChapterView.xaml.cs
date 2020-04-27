@@ -20,9 +20,14 @@ namespace JMangaReader.Views
 {
     public class ChapterViewModel : INotifyPropertyChanged
     {
-        private readonly IChapter _chapter;
+        private IChapter _chapter;
 
         public ChapterViewModel(IChapter chapter)
+        {
+            _chapter = chapter;
+        }
+
+        public void ChangeChapter(IChapter chapter)
         {
             _chapter = chapter;
         }
@@ -35,7 +40,9 @@ namespace JMangaReader.Views
         public double GetProgressBar => (float) LoadedImages / (float) MaxCountOfImages;
 
         public string GetLoadingText =>
-            IsBusy ? $"Loading... {LoadedImages}/{MaxCountOfImages}" : $"Глава: {_chapter.ChapterName}";
+            IsBusy
+                ? $"Глава: {_chapter.ChapterName}. [{LoadedImages}/{MaxCountOfImages}]"
+                : $"Глава: {_chapter.ChapterName}";
     }
 
     class ImageFit : Image
@@ -98,7 +105,7 @@ namespace JMangaReader.Views
     public partial class ChapterView : ContentPage
     {
         private readonly IReadOnlyList<IChapter> _chapters;
-        private readonly int _currentChapterIndex;
+        private int _currentChapterIndex;
         public IChapter Chapter { get; set; }
 
         public ChapterViewModel ViewModel { get; set; }
@@ -109,20 +116,28 @@ namespace JMangaReader.Views
         public ChapterView(IReadOnlyList<IChapter> chapters, int currentChapterIndex)
         {
             _chapters = chapters;
-            _currentChapterIndex = currentChapterIndex;
             Chapter = chapters[currentChapterIndex];
             InitializeComponent();
             BindingContext = ViewModel = new ChapterViewModel(Chapter);
-            CollectionView.ItemsSource = ViewModel.Images;
-            FreshLoading(Chapter);
+            // CollectionView.ItemsSource = ViewModel.Images;
+            FreshLoading(Chapter, currentChapterIndex);
+            DependencyService.Get<IStatusBar>()?.HideStatusBar();
         }
 
-        public void FreshLoading(IChapter chapter)
+        protected override bool OnBackButtonPressed()
         {
+            DependencyService.Get<IStatusBar>()?.ShowStatusBar();
+            return base.OnBackButtonPressed();
+        }
+
+        public void FreshLoading(IChapter chapter, int currentChapterIndex)
+        {
+            _currentChapterIndex = currentChapterIndex;
             ViewModel.Images.Clear();
             ViewModel.IsBusy = false;
             ViewModel.LoadedImages = 0;
             ViewModel.MaxCountOfImages = 0;
+            ViewModel.ChangeChapter(chapter);
             Chapter = chapter;
             StartPreLoading();
         }
@@ -189,15 +204,17 @@ namespace JMangaReader.Views
 
         private async void ChangeChapter(ChapterChangeType type)
         {
-            var nextChapterId = _currentChapterIndex + (type == ChapterChangeType.Back ? -1 : 1);
-            var nextChapter = _chapters[nextChapterId];
-            if (nextChapter == null)
+            var nextChapterId = _currentChapterIndex + (type == ChapterChangeType.Back ? 1 : -1);
+            var length = _chapters.Count;
+            if (nextChapterId < 0 || length < nextChapterId)
             {
-                await DisplayAlert("Info", "There is no more chapters", "ok :(");
+                await DisplayAlert("Info",
+                    $"There is no more chapters. {_currentChapterIndex} -> {nextChapterId} [{type}]", "ok :(");
                 return;
             }
 
-            FreshLoading(nextChapter);
+            var nextChapter = _chapters[nextChapterId];
+            FreshLoading(nextChapter, nextChapterId);
         }
 
         private void SwipeGestureRecognizer_OnSwiped(object sender, SwipedEventArgs e)
@@ -222,6 +239,22 @@ namespace JMangaReader.Views
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        private void CollectionView_OnScrolled(object sender, ItemsViewScrolledEventArgs e)
+        {
+            ButtonsLayout.IsVisible = e.LastVisibleItemIndex == ViewModel.MaxCountOfImages;
+            // ButtonsLayout.IsVisible = true;
+        }
+
+        private void BackButtonClick(object sender, EventArgs e)
+        {
+            ChangeChapter(ChapterChangeType.Back);
+        }
+        
+        private void NextButtonClick(object sender, EventArgs e)
+        {
+            ChangeChapter(ChapterChangeType.Next);
         }
     }
 }

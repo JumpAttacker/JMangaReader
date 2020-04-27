@@ -9,21 +9,27 @@ using Android.OS;
 using Android.Support.V4.App;
 using Android.Support.V4.Content;
 using FFImageLoading.Forms.Platform;
+using JMangaReader.Services;
+using Xamarin.Forms;
 
 namespace JMangaReader.Droid
 {
     [Activity(Label = "JMangaReader", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
+        public static Window GlobalWindow { get; set; }
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(savedInstanceState);
-
+            // Window.AddFlags(WindowManagerFlags.Fullscreen);
+            // Window.ClearFlags(WindowManagerFlags.ForceNotFullscreen);
+            GlobalWindow = Window;
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            Forms.Init(this, savedInstanceState);
             // CachedImageRenderer.Init(true);
             LoadApplication(new App());
 

@@ -17,11 +17,8 @@ namespace JMangaReader
         {
             DependencyService.Register<MockDataStore>();
             DependencyService.Register<ReadMangaScrapper>();
-
             InitializeComponent();
-
             MainPage = new MainPage();
-
             Registrations.Start("JMangaParser");
         }
 

@@ -10,7 +10,7 @@ namespace JMangaReader.ScrapperEngine
         public Chapter(string chapterName, string url, IManga manga)
         {
             ChapterName = chapterName;
-            Url = url;
+            Url = url.Replace("rest","t");
             Manga = manga;
             Load();
         }
