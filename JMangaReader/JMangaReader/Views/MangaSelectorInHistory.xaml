@@ -9,23 +9,23 @@
              xmlns:interface="clr-namespace:JMangaReader.ScrapperEngine.Interface;assembly=JMangaReader"
              xmlns:viewModels="clr-namespace:JMangaReader.ViewModels;assembly=JMangaReader"
              mc:Ignorable="d"
-             x:Class="JMangaReader.Views.MangaSelector"
+             x:Class="JMangaReader.Views.MangaSelectorInHistory"
              x:DataType="viewModels:MangaSelectorModel">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Очистить историю" Clicked="MenuItem_OnClicked" />
+        <ToolbarItem Text="Обновить" Clicked="Refresh" />
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="0" />
+                <!-- <RowDefinition Height="Auto" /> -->
                 <RowDefinition />
                 <!-- <RowDefinition /> -->
             </Grid.RowDefinitions>
             <ActivityIndicator IsRunning="{Binding IsBusy}" />
             <WebView Grid.Row="0" x:Name="Browser" IsVisible="False" />
-            <Entry Grid.Row="0" x:Name="SearchInput" Placeholder="Введите название манги" />
-            <Button Grid.Row="1" Text="Поиск" x:Name="SearchButton" />
-            <Label Grid.Row="2" IsVisible="{Binding IsErrorMessageVisible}" Text="Пусто" />
-            <!-- <ScrollView Grid.Row="2"> -->
-            <ListView Grid.Row="2" ItemsSource="{Binding MangaList}"
+            <ListView Grid.Row="1" ItemsSource="{Binding MangaList}"
                       ItemTapped="ListView_ItemTapped"
                       HasUnevenRows="True"
                       CachingStrategy="RecycleElement">

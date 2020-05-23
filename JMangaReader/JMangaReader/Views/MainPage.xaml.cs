@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
 using JMangaReader.Models;
+using Xamarin.Forms;
 
 namespace JMangaReader.Views
 {
@@ -14,40 +12,46 @@ namespace JMangaReader.Views
     [DesignTimeVisible(false)]
     public partial class MainPage : MasterDetailPage
     {
-        readonly Dictionary<int, NavigationPage> _menuPages = new Dictionary<int, NavigationPage>();
+        private readonly Dictionary<int, NavigationPage> _menuPages = new Dictionary<int, NavigationPage>();
+
         public MainPage()
         {
             InitializeComponent();
 
             MasterBehavior = MasterBehavior.Popover;
 
-            _menuPages.Add((int)MenuItemType.MangaSelectorView, (NavigationPage)Detail);
+            _menuPages.Add((int) MenuItemType.MangaSelectorView, (NavigationPage) Detail);
         }
 
         public async Task NavigateFromMenu(MenuItemType type)
         {
             await NavigateFromMenu((int) type);
         }
+
         public async Task NavigateFromMenu(int id)
         {
             if (!_menuPages.ContainsKey(id))
-            {
                 switch (id)
                 {
-                    case (int)MenuItemType.Browse:
+                    case (int) MenuItemType.Browse:
                         _menuPages.Add(id, new NavigationPage(new ItemsPage()));
                         break;
-                    case (int)MenuItemType.About:
+                    case (int) MenuItemType.About:
                         _menuPages.Add(id, new NavigationPage(new AboutPage()));
                         break;
-                    case (int)MenuItemType.MangaSelectorView:
+                    case (int) MenuItemType.MangaSelectorView:
                         _menuPages.Add(id, new NavigationPage(new MangaSelector()));
+                        break;
+                    case (int) MenuItemType.History:
+                        _menuPages.Add(id, new NavigationPage(new MangaSelectorInHistory()));
+                        break;
+                    default:
+                        throw new NotImplementedException($"cant find {nameof(id)} = {id}");
                         break;
                     // case (int)MenuItemType.ChapterSelectorView:
                     //     _menuPages.Add(id, new NavigationPage(new ChapterSelector()));
                     //     break;
                 }
-            }
 
             var newPage = _menuPages[id];
 

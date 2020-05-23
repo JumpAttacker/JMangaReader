@@ -1,5 +1,4 @@
-﻿using Android.App;
-using Android.Views;
+﻿using Android.Views;
 using JMangaReader.Droid;
 using JMangaReader.Services;
 using Xamarin.Forms;

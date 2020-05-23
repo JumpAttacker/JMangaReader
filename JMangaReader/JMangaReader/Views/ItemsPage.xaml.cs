@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
 using JMangaReader.Models;
 using JMangaReader.Services;
-using JMangaReader.Views;
 using JMangaReader.ViewModels;
+using Xamarin.Forms;
 
 namespace JMangaReader.Views
 {
@@ -19,7 +12,7 @@ namespace JMangaReader.Views
     [DesignTimeVisible(false)]
     public partial class ItemsPage : ContentPage
     {
-        ItemsViewModel viewModel;
+        private readonly ItemsViewModel viewModel;
 
         public ItemsPage()
         {
@@ -29,14 +22,14 @@ namespace JMangaReader.Views
             BindingContext = viewModel = new ItemsViewModel();
         }
 
-        async void OnItemSelected(object sender, EventArgs args)
+        private async void OnItemSelected(object sender, EventArgs args)
         {
-            var layout = (BindableObject)sender;
-            var item = (Item)layout.BindingContext;
+            var layout = (BindableObject) sender;
+            var item = (Item) layout.BindingContext;
             await Navigation.PushAsync(new ItemDetailPage(new ItemDetailViewModel(item)));
         }
 
-        async void AddItem_Clicked(object sender, EventArgs e)
+        private async void AddItem_Clicked(object sender, EventArgs e)
         {
             await Navigation.PushModalAsync(new NavigationPage(new NewItemPage()));
         }

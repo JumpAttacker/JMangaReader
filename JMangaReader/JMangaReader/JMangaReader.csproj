@@ -28,6 +28,9 @@
     <Compile Update="Views\MangaSelector.xaml.cs">
       <DependentUpon>MangaSelector.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\MangaSelectorInHistory.xaml.cs">
+      <DependentUpon>MangaSelectorInHistory.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +42,10 @@
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MangaSelector.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\MangaSelectorInHistory.xaml">
+      <SubType>Designer</SubType>
+      <Generator></Generator>
     </EmbeddedResource>
   </ItemGroup>
 </Project>

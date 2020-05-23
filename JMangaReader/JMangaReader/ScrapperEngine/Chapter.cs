@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using Akavache;
+using JMangaReader.ScrapperEngine.Interface;
 
 namespace JMangaReader.ScrapperEngine
 {
@@ -10,7 +10,7 @@ namespace JMangaReader.ScrapperEngine
         public Chapter(string chapterName, string url, IManga manga)
         {
             ChapterName = chapterName;
-            Url = url.Replace("rest","t");
+            Url = url.Replace("rest", "t");
             Manga = manga;
             Load();
         }

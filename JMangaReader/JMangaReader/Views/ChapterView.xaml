@@ -41,8 +41,9 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" HorizontalOptions="FillAndExpand" Text="Previous" Clicked="BackButtonClick"/>
-                <Button Grid.Column="2" HorizontalOptions="FillAndExpand" Text="Next" WidthRequest="200"  Clicked="NextButtonClick"/>
+                <Button Grid.Column="0" HorizontalOptions="FillAndExpand" Text="Previous" Clicked="BackButtonClick" />
+                <Button Grid.Column="2" HorizontalOptions="FillAndExpand" Text="Next" WidthRequest="200"
+                        Clicked="NextButtonClick" />
             </Grid>
         </StackLayout>
         <!-- </ScrollView> -->

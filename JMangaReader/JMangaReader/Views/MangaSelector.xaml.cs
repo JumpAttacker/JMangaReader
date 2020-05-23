@@ -1,25 +1,15 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using JMangaReader.ScrapperEngine;
+using JMangaReader.ScrapperEngine.Interface;
+using JMangaReader.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace JMangaReader.Views
 {
-    public class MangaSelectorModel : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-        public bool IsBusy { get; set; }
-        public ObservableCollection<IManga> MangaList { get; set; } = new ObservableCollection<IManga>();
-        public bool IsErrorMessageVisible { get; set; }
-    }
-
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MangaSelector : ContentPage
     {
-        private MangaSelectorModel MangaSelectorModel { get; }
-
         public MangaSelector()
         {
             InitializeComponent();
@@ -38,6 +28,8 @@ namespace JMangaReader.Views
             SearchButton.Clicked += DoSearch;
             BindingContext = MangaSelectorModel = new MangaSelectorModel();
         }
+
+        private MangaSelectorModel MangaSelectorModel { get; }
 
         public IScrapper Scrapper { get; set; }
 
@@ -58,10 +50,7 @@ namespace JMangaReader.Views
             MangaSelectorModel.IsBusy = true;
             MangaSelectorModel.MangaList.Clear();
             var searchResult = await Scrapper.Search(SearchInput.Text);
-            foreach (var manga in searchResult)
-            {
-                MangaSelectorModel.MangaList.Add(manga);
-            }
+            foreach (var manga in searchResult) MangaSelectorModel.MangaList.Add(manga);
 
             MangaSelectorModel.IsBusy = false;
             MangaSelectorModel.IsErrorMessageVisible = MangaSelectorModel.MangaList.Count == 0;

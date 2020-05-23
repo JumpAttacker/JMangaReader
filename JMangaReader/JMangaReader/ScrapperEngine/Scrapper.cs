@@ -5,14 +5,16 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using JMangaReader.ScrapperEngine.Interface;
+using JMangaReader.Services;
 using Xamarin.Forms;
 
 namespace JMangaReader.ScrapperEngine
 {
     public class ReadMangaScrapper : IScrapper
     {
-        private WebView _webView;
         private const string BaseUrl = "https://readmanga.me/";
+        private WebView _webView;
         public IManga SelectedManga { get; set; }
 
         public void SetWebView(WebView newWebView)
@@ -52,14 +54,29 @@ namespace JMangaReader.ScrapperEngine
                     new Manga(
                         $"{x.h3.InnerText} {(x.h4 != null ? $"({x.h4.InnerText})" : string.Empty)}",
                         x.h3.Descendants("a").First().GetAttributeValue("href", string.Empty), x.imageUrl));
-            return mangaLinks.Where(x=>x.Url.StartsWith("/") || x.Url.StartsWith("https://mintmanga.live/")).ToList();
+            return mangaLinks.Where(x => x.Url.StartsWith("/") || x.Url.StartsWith("https://mintmanga.live/")).ToList();
         }
 
         public async Task<bool> SelectManga(IManga manga)
         {
             SelectedManga = manga;
             var chapters = await SelectedManga.LoadChaptersListAsync();
+            await SaveManga(manga);
             return chapters?.Count > 0;
         }
+        
+        private async Task SaveManga(IManga manga)
+        {
+            var historyService = DependencyService.Get<IHistory>();
+            if (historyService == null)
+            {
+                return;
+            }
+            await historyService.AddMangaToHistory(manga);
+            // var history = await historyService.GetListOfLastManga();
+            // Console.WriteLine("kek");
+        }
+        
+        
     }
 }

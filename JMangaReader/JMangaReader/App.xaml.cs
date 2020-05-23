@@ -1,18 +1,13 @@
-using System;
-using System.Reactive.Linq;
 using Akavache;
 using JMangaReader.ScrapperEngine;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 using JMangaReader.Services;
 using JMangaReader.Views;
+using Xamarin.Forms;
 
 namespace JMangaReader
 {
     public partial class App : Application
     {
-        public static string BaseImageUrl { get; } = "https://cdn.syncfusion.com/essential-ui-kit-for-xamarin.forms/common/uikitimages/";
-
         public App()
         {
             DependencyService.Register<MockDataStore>();
@@ -21,6 +16,9 @@ namespace JMangaReader
             MainPage = new MainPage();
             Registrations.Start("JMangaParser");
         }
+
+        public static string BaseImageUrl { get; } =
+            "https://cdn.syncfusion.com/essential-ui-kit-for-xamarin.forms/common/uikitimages/";
 
         protected override void OnStart()
         {

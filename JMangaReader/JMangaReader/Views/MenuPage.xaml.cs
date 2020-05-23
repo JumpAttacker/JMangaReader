@@ -18,7 +18,8 @@ namespace JMangaReader.Views
             {
                 new HomeMenuItem {Id = MenuItemType.Browse, Title = "Browse"},
                 new HomeMenuItem {Id = MenuItemType.MangaSelectorView, Title = "MangaSelectorView"},
-                new HomeMenuItem {Id = MenuItemType.About, Title = "About"}
+                new HomeMenuItem {Id = MenuItemType.About, Title = "About"},
+                new HomeMenuItem {Id = MenuItemType.History, Title = "History"},
             };
 
             ListViewMenu.ItemsSource = menuItems;

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace JMangaReader.Models
+﻿namespace JMangaReader.Models
 {
     public class Item
     {

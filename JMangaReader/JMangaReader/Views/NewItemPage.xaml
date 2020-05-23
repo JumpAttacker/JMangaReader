@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
+
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
@@ -6,12 +7,12 @@
              mc:Ignorable="d"
              x:Class="JMangaReader.Views.NewItemPage"
              Title="New Item">
-    
+
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Cancel" Clicked="Cancel_Clicked" />
         <ToolbarItem Text="Save" Clicked="Save_Clicked" />
     </ContentPage.ToolbarItems>
-    
+
     <ContentPage.Content>
         <StackLayout Spacing="20" Padding="15">
             <Label Text="Text" FontSize="Medium" />
@@ -20,5 +21,5 @@
             <Editor Text="{Binding Item.Description}" d:Text="Item description" FontSize="Small" Margin="0" />
         </StackLayout>
     </ContentPage.Content>
-    
+
 </ContentPage>

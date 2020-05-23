@@ -1,10 +1,7 @@
-﻿using System;
-using System.ComponentModel;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
+﻿using System.ComponentModel;
 using JMangaReader.Models;
 using JMangaReader.ViewModels;
+using Xamarin.Forms;
 
 namespace JMangaReader.Views
 {
@@ -13,7 +10,7 @@ namespace JMangaReader.Views
     [DesignTimeVisible(false)]
     public partial class ItemDetailPage : ContentPage
     {
-        ItemDetailViewModel viewModel;
+        private readonly ItemDetailViewModel viewModel;
 
         public ItemDetailPage(ItemDetailViewModel viewModel)
         {

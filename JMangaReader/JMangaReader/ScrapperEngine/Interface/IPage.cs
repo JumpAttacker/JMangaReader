@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace JMangaReader.ScrapperEngine
+namespace JMangaReader.ScrapperEngine.Interface
 {
     public interface IPage
     {

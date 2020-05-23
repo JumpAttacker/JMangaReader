@@ -7,21 +7,21 @@
              xmlns:views="clr-namespace:JMangaReader.Views;assembly=JMangaReader"
              xmlns:generic="clr-namespace:System.Collections.Generic;assembly=netstandard"
              xmlns:scrapperEngine="clr-namespace:JMangaReader.ScrapperEngine;assembly=JMangaReader"
+             xmlns:interface="clr-namespace:JMangaReader.ScrapperEngine.Interface;assembly=JMangaReader"
              mc:Ignorable="d"
              x:Class="JMangaReader.Views.ChapterSelector"
-             x:DataType="views:ChapterSelectorViewModel"
-             >
+             x:DataType="views:ChapterSelectorViewModel">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Сортировать" />
     </ContentPage.ToolbarItems>
     <StackLayout>
-        <Label Text="{Binding ChapterCountText}"/>
+        <Label Text="{Binding ChapterCountText}" />
         <ListView ItemsSource="{Binding Chapters}"
                   ItemTapped="Handle_ItemTapped"
                   CachingStrategy="RecycleElement">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="scrapperEngine:IChapter">
-                    <TextCell Text="{Binding ChapterName}"/>
+                <DataTemplate x:DataType="interface:IChapter">
+                    <TextCell Text="{Binding ChapterName}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

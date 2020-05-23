@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Xamarin.Forms;
+using Newtonsoft.Json;
 
-namespace JMangaReader.ScrapperEngine
+namespace JMangaReader.ScrapperEngine.Interface
 {
     public interface IManga
     {
@@ -13,6 +13,5 @@ namespace JMangaReader.ScrapperEngine
         List<IChapter> Chapters { get; set; }
         int CountOfChapters { get; }
         Task<IList<IChapter>> LoadChaptersListAsync(bool firstTime = true);
-        
     }
 }

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
 using JMangaReader.Models;
+using Xamarin.Forms;
 
 namespace JMangaReader.Views
 {
@@ -13,8 +10,6 @@ namespace JMangaReader.Views
     [DesignTimeVisible(false)]
     public partial class NewItemPage : ContentPage
     {
-        public Item Item { get; set; }
-
         public NewItemPage()
         {
             InitializeComponent();
@@ -28,13 +23,15 @@ namespace JMangaReader.Views
             BindingContext = this;
         }
 
-        async void Save_Clicked(object sender, EventArgs e)
+        public Item Item { get; set; }
+
+        private async void Save_Clicked(object sender, EventArgs e)
         {
             MessagingCenter.Send(this, "AddItem", Item);
             await Navigation.PopModalAsync();
         }
 
-        async void Cancel_Clicked(object sender, EventArgs e)
+        private async void Cancel_Clicked(object sender, EventArgs e)
         {
             await Navigation.PopModalAsync();
         }

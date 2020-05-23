@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using FFImageLoading.Forms;
-using JMangaReader.ScrapperEngine;
+using JMangaReader.ScrapperEngine.Interface;
 using JMangaReader.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -27,29 +20,30 @@ namespace JMangaReader.Views
             _chapter = chapter;
         }
 
-        public void ChangeChapter(IChapter chapter)
-        {
-            _chapter = chapter;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
         public ObservableCollection<ImageUrl> Images { get; set; } = new ObservableCollection<ImageUrl>();
         public bool IsBusy { get; set; }
         public int MaxCountOfImages { get; set; }
         public int LoadedImages { get; set; }
-        public double GetProgressBar => (float) LoadedImages / (float) MaxCountOfImages;
+        public double GetProgressBar => LoadedImages / (float) MaxCountOfImages;
 
         public string GetLoadingText =>
             IsBusy
                 ? $"Глава: {_chapter.ChapterName}. [{LoadedImages}/{MaxCountOfImages}]"
                 : $"Глава: {_chapter.ChapterName}";
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void ChangeChapter(IChapter chapter)
+        {
+            _chapter = chapter;
+        }
     }
 
-    class ImageFit : Image
+    internal class ImageFit : Image
     {
         protected override SizeRequest OnMeasure(double widthConstraint, double heightConstraint)
         {
-            SizeRequest sizeRequest = base.OnMeasure(double.PositiveInfinity, double.PositiveInfinity);
+            var sizeRequest = base.OnMeasure(double.PositiveInfinity, double.PositiveInfinity);
 
             var innerRatio = sizeRequest.Request.Width / sizeRequest.Request.Height;
 
@@ -78,9 +72,9 @@ namespace JMangaReader.Views
                 // strech the image to make it fit while conserving it's ratio
                 var outerRatio = widthConstraint / heightConstraint;
 
-                var ratioFactor = (innerRatio >= outerRatio)
-                    ? (widthConstraint / sizeRequest.Request.Width)
-                    : (heightConstraint / sizeRequest.Request.Height);
+                var ratioFactor = innerRatio >= outerRatio
+                    ? widthConstraint / sizeRequest.Request.Width
+                    : heightConstraint / sizeRequest.Request.Height;
 
                 widthConstraint = sizeRequest.Request.Width * ratioFactor;
                 heightConstraint = sizeRequest.Request.Height * ratioFactor;
@@ -93,22 +87,20 @@ namespace JMangaReader.Views
 
     public class ImageUrl
     {
-        public string Url { get; set; }
-
         public ImageUrl(string url)
         {
             Url = url;
         }
+
+        public string Url { get; set; }
     }
 
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ChapterView : ContentPage
     {
         private readonly IReadOnlyList<IChapter> _chapters;
-        private int _currentChapterIndex;
-        public IChapter Chapter { get; set; }
 
-        public ChapterViewModel ViewModel { get; set; }
+        private int _currentChapterIndex;
         // public ObservableCollection<ImageUrl> ImagesObservableCollection { get; } = new ObservableCollection<ImageUrl>();
 
         public int Left = -1;
@@ -123,6 +115,10 @@ namespace JMangaReader.Views
             FreshLoading(Chapter, currentChapterIndex);
             DependencyService.Get<IStatusBar>()?.HideStatusBar();
         }
+
+        public IChapter Chapter { get; set; }
+
+        public ChapterViewModel ViewModel { get; set; }
 
         protected override bool OnBackButtonPressed()
         {
@@ -156,27 +152,37 @@ namespace JMangaReader.Views
                 await Browser.EvaluateJavaScriptAsync("document.body.querySelector('span.pages-count').innerText");
             var imageUrl = await Browser.EvaluateJavaScriptAsync(
                 "Array.from(document.body.querySelectorAll('#mangaPicture')).map(a => a.src)[0];");
+            if (string.IsNullOrEmpty(pageCount))
+                return;
+
             Left = int.Parse(pageCount);
             ViewModel.MaxCountOfImages = Left;
             ViewModel.Images.Add(new ImageUrl(imageUrl));
             ViewModel.LoadedImages++;
             // var path = await DownloadImageAsync(new Uri(imageUrl));
-            if (imageUrl == null || string.IsNullOrEmpty(imageUrl))
+            if (string.IsNullOrEmpty(imageUrl))
                 return;
             var data = await new WebClient().DownloadDataTaskAsync(imageUrl);
             var fileService = DependencyService.Get<IFileService>();
             fileService.SavePicture($"{Chapter.ChapterName}_{0}.jpg", data, Chapter.Manga.MangaName);
             for (var i = 0; i < Left; i++)
-            {
-                await Browser.EvaluateJavaScriptAsync("document.getElementById('mangaPicture').click()");
-                imageUrl = await Browser.EvaluateJavaScriptAsync(
-                    "Array.from(document.body.querySelectorAll('#mangaPicture')).map(a => a.src)[0];");
-                data = await new WebClient().DownloadDataTaskAsync(imageUrl);
-                fileService.SavePicture($"{Chapter.ChapterName}_{i + 1}.jpg", data, Chapter.Manga.MangaName);
-                ViewModel.Images.Add(new ImageUrl(imageUrl));
-                ViewModel.LoadedImages++;
-                await Task.Delay(15);
-            }
+                try
+                {
+                    await Browser?.EvaluateJavaScriptAsync("document.getElementById('mangaPicture').click()");
+                    imageUrl = await Browser?.EvaluateJavaScriptAsync(
+                        "Array.from(document.body.querySelectorAll('#mangaPicture')).map(a => a.src)[0];");
+                    if (string.IsNullOrEmpty(imageUrl)) return;
+                    data = await new WebClient().DownloadDataTaskAsync(imageUrl);
+                    fileService?.SavePicture($"{Chapter.ChapterName}_{i + 1}.jpg", data, Chapter.Manga.MangaName);
+                    ViewModel.Images.Add(new ImageUrl(imageUrl));
+                    ViewModel.LoadedImages++;
+                    await Task.Delay(15);
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
+                    return;
+                }
 
             ViewModel.IsBusy = false;
         }
@@ -194,12 +200,6 @@ namespace JMangaReader.Views
         private void OnPanUpdated(object sender, PanUpdatedEventArgs e)
         {
             DisplayAlert("move", "move", "ook");
-        }
-
-        enum ChapterChangeType
-        {
-            Back,
-            Next
         }
 
         private async void ChangeChapter(ChapterChangeType type)
@@ -251,10 +251,16 @@ namespace JMangaReader.Views
         {
             ChangeChapter(ChapterChangeType.Back);
         }
-        
+
         private void NextButtonClick(object sender, EventArgs e)
         {
             ChangeChapter(ChapterChangeType.Next);
+        }
+
+        private enum ChapterChangeType
+        {
+            Back,
+            Next
         }
     }
 }

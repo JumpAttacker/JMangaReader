@@ -1,4 +1,6 @@
-﻿namespace JMangaReader.ScrapperEngine
+﻿using JMangaReader.ScrapperEngine.Interface;
+
+namespace JMangaReader.ScrapperEngine
 {
     public class Comment : IComment
     {
