@@ -31,6 +31,12 @@
     <Compile Update="Views\MangaSelectorInHistory.xaml.cs">
       <DependentUpon>MangaSelectorInHistory.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\FavoriteList.xaml.cs">
+      <DependentUpon>FavoriteList.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -44,6 +50,14 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MangaSelectorInHistory.xaml">
+      <SubType>Designer</SubType>
+      <Generator></Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\FavoriteList.xaml">
+      <SubType>Designer</SubType>
+      <Generator></Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\SettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator></Generator>
     </EmbeddedResource>

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using JMangaReader.ScrapperEngine;
 using JMangaReader.ScrapperEngine.Interface;
@@ -11,9 +13,9 @@ using Xamarin.Forms.Xaml;
 namespace JMangaReader.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MangaSelectorInHistory : ContentPage
+    public partial class FavoriteList : ContentPage
     {
-        public MangaSelectorInHistory()
+        public FavoriteList()
         {
             InitializeComponent();
             Scrapper = DependencyService.Get<ReadMangaScrapper>();
@@ -27,7 +29,7 @@ namespace JMangaReader.Views
                 return;
             }
 
-            BindingContext = MangaSelectorModel = new MangaSelectorModel();
+            BindingContext = MangaSelectorModel = new MangaListModel();
         }
 
         protected override async void OnAppearing()
@@ -35,12 +37,11 @@ namespace JMangaReader.Views
             base.OnAppearing();
             
             MangaSelectorModel.MangaList.Clear();
-
+            
             await GetData();
         }
 
-
-        private MangaSelectorModel MangaSelectorModel { get; set; }
+        private MangaListModel MangaSelectorModel { get; set; }
 
         public IScrapper Scrapper { get; set; }
 
@@ -54,10 +55,10 @@ namespace JMangaReader.Views
                 return;
             }
 
-            var mangaHistory = await historyService.GetListOfLastManga();
+            var mangaHistory = await historyService.GetFavoriteListManga();
             // var history = await historyService.GetListOfLastManga();
             // Console.WriteLine("kek");
-            foreach (var model in mangaHistory.MangaHistoryViewModels.OrderByDescending(x => x.Created))
+            foreach (var model in mangaHistory.Favorites.OrderByDescending(x => x.Created))
             {
                 var manga = new Manga(model.MangaName, model.Url, model.ImageUrl);
                 MangaSelectorModel.MangaList.Add(manga);
@@ -66,7 +67,6 @@ namespace JMangaReader.Views
             MangaSelectorModel.IsBusy = false;
             MangaSelectorModel.IsErrorMessageVisible = MangaSelectorModel.MangaList.Count == 0;
         }
-
         private async void ListView_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             MangaSelectorModel.IsBusy = true;
@@ -77,36 +77,6 @@ namespace JMangaReader.Views
                 await Navigation.PushAsync(new ChapterSelector(Scrapper));
             else
                 await DisplayAlert("Ошибка", "Ошибка при выборе манги", "И шо?");
-        }
-
-        /// <summary>
-        /// clear history
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        private async void MenuItem_OnClicked(object sender, EventArgs e)
-        {
-            var historyService = DependencyService.Get<IHistory>();
-            if (historyService == null)
-            {
-                return;
-            }
-
-            MangaSelectorModel.IsBusy = true;
-            await historyService.ClearMangaHistory();
-            await GetData();
-        }
-
-        /// <summary>
-        /// Refresh
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        private async void Refresh(object sender, EventArgs e)
-        {
-            await GetData();
         }
     }
 }

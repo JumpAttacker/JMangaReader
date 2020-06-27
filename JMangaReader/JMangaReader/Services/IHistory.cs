@@ -8,13 +8,16 @@ namespace JMangaReader.Services
 {
     public interface IHistory
     {
-        Task<HistoryModel> GetListOfLastManga();
-        IChapter GetLastChapterOfManga(IManga manga);
+        Task<HistoryMangaModel> GetListOfLastManga();
+        Task<HistoryChapterModel> GetChapterListOfManga(IManga manga);
         Task AddMangaToHistory(IManga manga);
         void AddChapterToHistory(IChapter chapter);
-        List<IChapter> GetListOfWatchedChapters(IManga manga);
-
         Task ClearMangaHistory();
+
+        Task AddMangaToFavorite(IManga manga);
+        Task RemoveMangaFromFavorite(IManga manga);
+        Task<bool> IsMangaFavorite(IManga manga);
+        Task<FavoriteHistoryModel> GetFavoriteListManga();
 
     }
 }

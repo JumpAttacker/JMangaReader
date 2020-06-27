@@ -10,8 +10,13 @@ namespace JMangaReader.Droid
 {
     public class FileService : IFileService
     {
+        public bool IsActive { get; set; }
+        
+
         public string SavePicture(string name, byte[] data, string location = "temp")
         {
+            if (!IsActive)
+                return string.Empty;
             var documentsPath = Path.Combine(Environment.ExternalStorageDirectory.AbsolutePath,
                 Environment.DirectoryDownloads);
             documentsPath = Path.Combine(documentsPath, "Manga", location);

@@ -2,19 +2,11 @@
 
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:views="clr-namespace:JMangaReader.Views;assembly=JMangaReader"
-             xmlns:scrapperEngine="clr-namespace:JMangaReader.ScrapperEngine;assembly=JMangaReader"
              xmlns:interface="clr-namespace:JMangaReader.ScrapperEngine.Interface;assembly=JMangaReader"
+             xmlns:views="clr-namespace:JMangaReader.Views;assembly=JMangaReader"
              xmlns:viewModels="clr-namespace:JMangaReader.ViewModels;assembly=JMangaReader"
-             mc:Ignorable="d"
-             x:Class="JMangaReader.Views.MangaSelectorInHistory"
-             x:DataType="viewModels:MangaSelectorModel">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Очистить историю" Clicked="MenuItem_OnClicked" />
-        <!-- <ToolbarItem Text="Обновить" Clicked="Refresh" /> -->
-    </ContentPage.ToolbarItems>
+             x:Class="JMangaReader.Views.FavoriteList"
+             x:DataType="viewModels:MangaListModel">
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>

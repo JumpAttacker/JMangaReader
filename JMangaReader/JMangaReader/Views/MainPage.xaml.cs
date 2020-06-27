@@ -45,6 +45,12 @@ namespace JMangaReader.Views
                     case (int) MenuItemType.History:
                         _menuPages.Add(id, new NavigationPage(new MangaSelectorInHistory()));
                         break;
+                    case (int) MenuItemType.Favorite:
+                        _menuPages.Add(id, new NavigationPage(new FavoriteList()));
+                        break;
+                    case (int) MenuItemType.Settings:
+                        _menuPages.Add(id, new NavigationPage(new SettingsPage()));
+                        break;
                     default:
                         throw new NotImplementedException($"cant find {nameof(id)} = {id}");
                         break;

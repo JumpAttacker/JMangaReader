@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using JMangaReader.Models;
 using JMangaReader.ScrapperEngine.Interface;
 using JMangaReader.Services;
 using Xamarin.Forms;
@@ -15,6 +16,13 @@ namespace JMangaReader.ScrapperEngine
     {
         private const string BaseUrl = "https://readmanga.me/";
         private WebView _webView;
+        private readonly IHistory _historyService;
+
+        public ReadMangaScrapper()
+        {
+            _historyService = DependencyService.Get<IHistory>();
+        }
+
         public IManga SelectedManga { get; set; }
 
         public void SetWebView(WebView newWebView)
@@ -54,29 +62,37 @@ namespace JMangaReader.ScrapperEngine
                     new Manga(
                         $"{x.h3.InnerText} {(x.h4 != null ? $"({x.h4.InnerText})" : string.Empty)}",
                         x.h3.Descendants("a").First().GetAttributeValue("href", string.Empty), x.imageUrl));
-            return mangaLinks.Where(x => x.Url.StartsWith("/") || x.Url.StartsWith("https://mintmanga.live/")).ToList();
+            return mangaLinks.Where(x =>
+                (x.Url.StartsWith("/") || x.Url.StartsWith("https://mintmanga.live/")) &&
+                !x.Url.StartsWith("/list/person/")).ToList();
         }
 
         public async Task<bool> SelectManga(IManga manga)
         {
             SelectedManga = manga;
+            manga.IsFavorite = await _historyService.IsMangaFavorite(manga);
             var chapters = await SelectedManga.LoadChaptersListAsync();
+            var chaptersInHistory = await GetChaptersInHistory(manga);
+            foreach (var chapter in chapters.Where(x =>
+                chaptersInHistory.ChapterHistoryViewModels.FirstOrDefault(z => z.Url == x.Url) != null))
+            {
+                chapter.InHistory = true;
+            }
+
             await SaveManga(manga);
             return chapters?.Count > 0;
         }
-        
+
         private async Task SaveManga(IManga manga)
         {
-            var historyService = DependencyService.Get<IHistory>();
-            if (historyService == null)
-            {
-                return;
-            }
-            await historyService.AddMangaToHistory(manga);
+            await _historyService.AddMangaToHistory(manga);
             // var history = await historyService.GetListOfLastManga();
             // Console.WriteLine("kek");
         }
-        
-        
+
+        private async Task<HistoryChapterModel> GetChaptersInHistory(IManga manga)
+        {
+            return await _historyService.GetChapterListOfManga(manga);
+        }
     }
 }

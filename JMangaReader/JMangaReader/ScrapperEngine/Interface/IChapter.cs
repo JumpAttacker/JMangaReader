@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Xamarin.Forms;
 
 namespace JMangaReader.ScrapperEngine.Interface
 {
@@ -9,8 +10,10 @@ namespace JMangaReader.ScrapperEngine.Interface
         bool Downloaded { get; set; }
         List<IPage> Pages { get; set; }
         IManga Manga { get; set; }
-        bool IsWatch { get; set; }
         void Load();
         void Save(bool value);
+        bool InHistory { get; set; }
+        Color Color { get; }
+        int Id { get; set; }
     }
 }

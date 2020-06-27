@@ -5,6 +5,8 @@
         Browse,
         MangaSelectorView,
         About,
-        History
+        History,
+        Favorite,
+        Settings,
     }
 }

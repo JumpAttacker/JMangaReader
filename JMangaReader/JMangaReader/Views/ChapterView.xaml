@@ -6,10 +6,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:JMangaReader.Views;assembly=JMangaReader"
              xmlns:forms="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:viewModels="clr-namespace:JMangaReader.ViewModels;assembly=JMangaReader"
              mc:Ignorable="d"
              NavigationPage.HasNavigationBar="false"
              x:Class="JMangaReader.Views.ChapterView"
-             x:DataType="views:ChapterViewModel">
+             x:DataType="viewModels:ChapterViewModel">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="ShowBrowser" Clicked="MenuItem_OnClicked" />
     </ContentPage.ToolbarItems>
@@ -23,14 +24,14 @@
                             SelectionChanged="CollectionView_OnSelectionChanged" SelectionMode="Single"
                             Scrolled="CollectionView_OnScrolled">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="views:ImageUrl">
+                    <DataTemplate x:DataType="viewModels:ImageUrl">
                         <!-- <Grid> -->
-                        <views:ImageFit Source="{Binding Url}">
-                            <views:ImageFit.GestureRecognizers>
+                        <viewModels:ImageFit Source="{Binding Url}">
+                            <viewModels:ImageFit.GestureRecognizers>
                                 <SwipeGestureRecognizer Direction="Right" Swiped="SwipeGestureRecognizer_OnSwiped" />
                                 <SwipeGestureRecognizer Direction="Left" Swiped="SwipeGestureRecognizer_OnSwiped" />
-                            </views:ImageFit.GestureRecognizers>
-                        </views:ImageFit>
+                            </viewModels:ImageFit.GestureRecognizers>
+                        </viewModels:ImageFit>
                         <!-- </Grid> -->
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

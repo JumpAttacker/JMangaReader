@@ -1,100 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Net;
 using System.Threading.Tasks;
 using JMangaReader.ScrapperEngine.Interface;
 using JMangaReader.Services;
+using JMangaReader.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace JMangaReader.Views
 {
-    public class ChapterViewModel : INotifyPropertyChanged
-    {
-        private IChapter _chapter;
-
-        public ChapterViewModel(IChapter chapter)
-        {
-            _chapter = chapter;
-        }
-
-        public ObservableCollection<ImageUrl> Images { get; set; } = new ObservableCollection<ImageUrl>();
-        public bool IsBusy { get; set; }
-        public int MaxCountOfImages { get; set; }
-        public int LoadedImages { get; set; }
-        public double GetProgressBar => LoadedImages / (float) MaxCountOfImages;
-
-        public string GetLoadingText =>
-            IsBusy
-                ? $"Глава: {_chapter.ChapterName}. [{LoadedImages}/{MaxCountOfImages}]"
-                : $"Глава: {_chapter.ChapterName}";
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void ChangeChapter(IChapter chapter)
-        {
-            _chapter = chapter;
-        }
-    }
-
-    internal class ImageFit : Image
-    {
-        protected override SizeRequest OnMeasure(double widthConstraint, double heightConstraint)
-        {
-            var sizeRequest = base.OnMeasure(double.PositiveInfinity, double.PositiveInfinity);
-
-            var innerRatio = sizeRequest.Request.Width / sizeRequest.Request.Height;
-
-            // Width needs to be adjusted
-            if (double.IsInfinity(heightConstraint))
-            {
-                // Height needs to be adjusted
-                if (double.IsInfinity(widthConstraint))
-                {
-                    widthConstraint = sizeRequest.Request.Width;
-                    heightConstraint = sizeRequest.Request.Height;
-                }
-                else
-                {
-                    // Adjust height
-                    heightConstraint = widthConstraint * sizeRequest.Request.Height / sizeRequest.Request.Width;
-                }
-            }
-            else if (double.IsInfinity(widthConstraint))
-            {
-                // Adjust width
-                widthConstraint = heightConstraint * sizeRequest.Request.Width / sizeRequest.Request.Height;
-            }
-            else
-            {
-                // strech the image to make it fit while conserving it's ratio
-                var outerRatio = widthConstraint / heightConstraint;
-
-                var ratioFactor = innerRatio >= outerRatio
-                    ? widthConstraint / sizeRequest.Request.Width
-                    : heightConstraint / sizeRequest.Request.Height;
-
-                widthConstraint = sizeRequest.Request.Width * ratioFactor;
-                heightConstraint = sizeRequest.Request.Height * ratioFactor;
-            }
-
-            sizeRequest = new SizeRequest(new Size(widthConstraint, heightConstraint));
-            return sizeRequest;
-        }
-    }
-
-    public class ImageUrl
-    {
-        public ImageUrl(string url)
-        {
-            Url = url;
-        }
-
-        public string Url { get; set; }
-    }
-
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ChapterView : ContentPage
     {
@@ -136,6 +51,9 @@ namespace JMangaReader.Views
             ViewModel.ChangeChapter(chapter);
             Chapter = chapter;
             StartPreLoading();
+
+            var historyService = DependencyService.Get<IHistory>();
+            historyService.AddChapterToHistory(chapter);
         }
 
         private void StartPreLoading()
@@ -180,7 +98,7 @@ namespace JMangaReader.Views
                 }
                 catch (Exception exception)
                 {
-                    Console.WriteLine(exception);
+                    await DisplayAlert("Ошибка", $"{exception.Message}", "ok");
                     return;
                 }
 

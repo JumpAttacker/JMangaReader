@@ -12,6 +12,7 @@ namespace JMangaReader.ScrapperEngine.Interface
         string ImageUrl { get; set; }
         List<IChapter> Chapters { get; set; }
         int CountOfChapters { get; }
-        Task<IList<IChapter>> LoadChaptersListAsync(bool firstTime = true);
+        Task<IList<IChapter>> LoadChaptersListAsync(bool firstTime = true, bool useSecondChapterUrl = false);
+        bool IsFavorite { get; set; }
     }
 }

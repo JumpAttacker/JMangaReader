@@ -2,7 +2,7 @@
 
 namespace JMangaReader.Models
 {
-    public class HistoryModel
+    public class HistoryMangaModel
     {
         public List<MangaHistoryViewModel> MangaHistoryViewModels { get; set; }
     }
