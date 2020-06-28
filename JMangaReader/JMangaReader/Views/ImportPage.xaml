@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="JMangaReader.Views.ImportPage">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="1" Text="Импортировать" x:Name="Button"/>
+            <WebView Grid.Row="1" x:Name="Browser" IsVisible="False"/>
+            <ActivityIndicator Grid.Row="1" x:Name="IsLoading"></ActivityIndicator>
+            <Label Grid.Row="0" x:Name="infoText"></Label>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -20,6 +20,7 @@ namespace JMangaReader.Views
                 new HomeMenuItem {Id = MenuItemType.Favorite, Title = "Избранное"},
                 new HomeMenuItem {Id = MenuItemType.History, Title = "История"},
                 new HomeMenuItem {Id = MenuItemType.Settings, Title = "Настройки"},
+                new HomeMenuItem {Id = MenuItemType.Import, Title = "Импорт"},
                 // new HomeMenuItem {Id = MenuItemType.About, Title = "About"},
                 // new HomeMenuItem {Id = MenuItemType.Browse, Title = "Browse"},
             };

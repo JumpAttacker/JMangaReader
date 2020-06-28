@@ -16,6 +16,6 @@ namespace JMangaReader.Models
         public string ImageUrl { get; set; }
         public int CountOfChapters { get; set; }
         public DateTime Created { get; set; } = DateTime.Now;
-        public ChapterViewModel Chapter { get; set; }
+        public List<ChapterViewModel> Chapters { get; set; }
     }
 }

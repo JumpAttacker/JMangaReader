@@ -74,7 +74,8 @@ namespace JMangaReader.ScrapperEngine
             var chapters = await SelectedManga.LoadChaptersListAsync();
             var chaptersInHistory = await GetChaptersInHistory(manga);
             foreach (var chapter in chapters.Where(x =>
-                chaptersInHistory.ChapterHistoryViewModels.FirstOrDefault(z => z.Url == x.Url) != null))
+                chaptersInHistory.ChapterHistoryViewModels.FirstOrDefault(z =>
+                    z.Url.Replace("?mtr=", "") == x.Url.Replace("?mtr=", "")) != null))
             {
                 chapter.InHistory = true;
             }
@@ -82,7 +83,7 @@ namespace JMangaReader.ScrapperEngine
             await SaveManga(manga);
             return chapters?.Count > 0;
         }
-
+        
         private async Task SaveManga(IManga manga)
         {
             await _historyService.AddMangaToHistory(manga);

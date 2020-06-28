@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using JMangaReader.ScrapperEngine.Interface;
+﻿using JMangaReader.ScrapperEngine.Interface;
 
 namespace JMangaReader.Models
 {
@@ -7,10 +6,5 @@ namespace JMangaReader.Models
     {
         public string Url { get; set; }
         public string ChapterName { get; set; }
-    }
-
-    public class FavoriteHistoryModel
-    {
-        public List<MangaHistoryViewModel> Favorites { get; set; }
     }
 }

@@ -7,6 +7,10 @@
              xmlns:viewModels="clr-namespace:JMangaReader.ViewModels;assembly=JMangaReader"
              x:Class="JMangaReader.Views.FavoriteList"
              x:DataType="viewModels:MangaListModel">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Очистить список" Clicked="ClearHistory" />
+        <!-- <ToolbarItem Text="Загрузить главы" Clicked="GetChapters" /> -->
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
@@ -27,16 +31,27 @@
                         <ViewCell>
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="170" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="128" />
+                                    <ColumnDefinition Width="150" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <!-- <Label Grid.Row="0" Text="text" /> -->
-                                <Label Grid.Column="1" Text="{Binding GetDisplayName}" />
-                                <Image Grid.Column="0" Source="{Binding ImageUrl}" HeightRequest="128"
-                                       WidthRequest="128" Aspect="AspectFit" />
+                                <Label Grid.Column="1" Grid.Row="0" Text="{Binding GetDisplayName}" BackgroundColor="Coral" VerticalTextAlignment="Center"/>
+                                <Image Grid.RowSpan="2" Grid.Row="0" Grid.Column="0" Source="{Binding ImageUrl}"
+                                       HeightRequest="150"
+                                       WidthRequest="150" Aspect="AspectFit" />
+                                <ListView Grid.Column="1" Grid.Row="1" ItemsSource="{Binding GetTopChapters}" RowHeight="30">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="interface:IChapter">
+                                            <ViewCell>
+                                                <Label Text="{Binding ChapterName}" VerticalTextAlignment="Center" BackgroundColor="{Binding Color}"/>
+                                            </ViewCell>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
                             </Grid>
                         </ViewCell>
                     </DataTemplate>

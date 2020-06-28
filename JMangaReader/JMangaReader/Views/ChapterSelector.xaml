@@ -11,18 +11,20 @@
              x:Class="JMangaReader.Views.ChapterSelector"
              x:DataType="viewModels:ChapterSelectorViewModel">
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="sort.png" Clicked="MenuItem_Sort_OnClicked"/>
-        <ToolbarItem IconImageSource="{Binding FavoriteIcon}" Clicked="MenuItem_OnClicked"/>
+        <ToolbarItem IconImageSource="sort.png" Clicked="MenuItem_Sort_OnClicked" />
+        <ToolbarItem IconImageSource="{Binding FavoriteIcon}" Clicked="MenuItem_OnClicked" />
     </ContentPage.ToolbarItems>
     <StackLayout>
         <Label Text="{Binding ChapterCountText}" />
-        <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"/>
+        <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" />
         <ListView ItemsSource="{Binding GetChapters}"
                   ItemTapped="Handle_ItemTapped"
                   CachingStrategy="RecycleElement">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="interface:IChapter">
-                    <TextCell Text="{Binding ChapterName}" TextColor="{Binding Color}" />
+                    <ViewCell>
+                        <Label Padding="10,0,0,0" VerticalTextAlignment="Center" Text="{Binding ChapterName}" BackgroundColor="{Binding Color}" />
+                    </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

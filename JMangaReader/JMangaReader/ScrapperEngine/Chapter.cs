@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using Akavache;
 using JMangaReader.ScrapperEngine.Interface;
@@ -9,10 +10,13 @@ namespace JMangaReader.ScrapperEngine
     public class Chapter : IChapter
     {
         private static int _currentId = 0;
+
         public Chapter(string chapterName, string url, IManga manga)
         {
             ChapterName = chapterName;
-            Url = url.Replace("rest", "t");
+            var index = url.IndexOf("#page", StringComparison.Ordinal);
+            var sub = url;//url.Replace("res", "");
+            Url = index > 0 ? sub.Remove(index) : sub;
             Manga = manga;
             Id = _currentId++;
         }

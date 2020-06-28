@@ -50,6 +50,8 @@ namespace JMangaReader.Views
                         break;
                     case (int) MenuItemType.Settings:
                         _menuPages.Add(id, new NavigationPage(new SettingsPage()));
+                        break;case (int) MenuItemType.Import:
+                        _menuPages.Add(id, new NavigationPage(new ImportPage()));
                         break;
                     default:
                         throw new NotImplementedException($"cant find {nameof(id)} = {id}");

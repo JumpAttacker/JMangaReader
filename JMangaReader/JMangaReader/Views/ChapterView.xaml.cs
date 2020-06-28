@@ -75,6 +75,7 @@ namespace JMangaReader.Views
 
             Left = int.Parse(pageCount);
             ViewModel.MaxCountOfImages = Left;
+            imageUrl = imageUrl.Replace("https://res", "https://");
             ViewModel.Images.Add(new ImageUrl(imageUrl));
             ViewModel.LoadedImages++;
             // var path = await DownloadImageAsync(new Uri(imageUrl));
@@ -90,6 +91,7 @@ namespace JMangaReader.Views
                     imageUrl = await Browser?.EvaluateJavaScriptAsync(
                         "Array.from(document.body.querySelectorAll('#mangaPicture')).map(a => a.src)[0];");
                     if (string.IsNullOrEmpty(imageUrl)) return;
+                    imageUrl = imageUrl.Replace("https://res", "https://");
                     data = await new WebClient().DownloadDataTaskAsync(imageUrl);
                     fileService?.SavePicture($"{Chapter.ChapterName}_{i + 1}.jpg", data, Chapter.Manga.MangaName);
                     ViewModel.Images.Add(new ImageUrl(imageUrl));

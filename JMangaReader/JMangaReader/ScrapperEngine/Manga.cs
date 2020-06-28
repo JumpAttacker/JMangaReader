@@ -16,7 +16,7 @@ namespace JMangaReader.ScrapperEngine
     {
         public Manga(string name, string url, string imageUrl)
         {
-            MangaName = name;
+            MangaName = name.Replace("\n","").Trim();
             Url = url;
             ImageUrl = imageUrl;
             Chapters = new List<IChapter>();
@@ -31,6 +31,8 @@ namespace JMangaReader.ScrapperEngine
         public string ImageUrl { get; set; }
 
         public List<IChapter> Chapters { get; set; }
+        public List<IChapter> GetTopChapters => Chapters.Take(5).ToList();
+
         public int CountOfChapters => Chapters.Count;
 
         public async Task<IList<IChapter>> LoadChaptersListAsync(bool firstTime = true,

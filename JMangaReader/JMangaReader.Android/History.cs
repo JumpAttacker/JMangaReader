@@ -80,6 +80,11 @@ namespace JMangaReader.Droid
             await BlobCache.UserAccount.InvalidateObject<HistoryMangaModel>("MangaHistory");
         }
 
+        public async Task ClearFavoriteList()
+        {
+            await BlobCache.UserAccount.InvalidateObject<FavoriteHistoryModel>("favoriteList");
+        }
+
         public async Task AddMangaToFavorite(IManga manga)
         {
             var favoriteList = await BlobCache.UserAccount.GetOrCreateObject("favoriteList",
@@ -94,8 +99,35 @@ namespace JMangaReader.Droid
             favoriteList.Favorites.Add(new MangaHistoryViewModel()
             {
                 Url = manga.Url, MangaName = manga.MangaName, ImageUrl = manga.ImageUrl,
-                CountOfChapters = manga.CountOfChapters
+                CountOfChapters = manga.CountOfChapters,
+                Chapters = manga.Chapters.Select(x => new ChapterViewModel() {Url = x.Url, ChapterName = x.ChapterName})
+                    .ToList()
             });
+
+            await BlobCache.UserAccount.InsertObject("favoriteList", favoriteList);
+        }
+
+        public async Task AddMangaToFavorite(List<Manga> mangas)
+        {
+            var favoriteList = await BlobCache.UserAccount.GetOrCreateObject("favoriteList",
+                () => new FavoriteHistoryModel() {Favorites = new List<MangaHistoryViewModel>()});
+            foreach (var favorite in favoriteList.Favorites.ToList())
+            {
+                if (mangas.FirstOrDefault(z => z.Url == favorite.Url) != null)
+                    favoriteList.Favorites.Remove(favorite);
+            }
+
+            var filteredManga = mangas.Where(x => favoriteList.Favorites.FirstOrDefault(z => z.Url == x.Url) == null);
+            foreach (var manga in filteredManga)
+            {
+                favoriteList.Favorites.Add(new MangaHistoryViewModel()
+                {
+                    Url = manga.Url, MangaName = manga.MangaName, ImageUrl = manga.ImageUrl,
+                    CountOfChapters = manga.CountOfChapters, Chapters = manga.Chapters
+                        .Select(x => new ChapterViewModel() {Url = x.Url, ChapterName = x.ChapterName})
+                        .ToList()
+                });
+            }
 
             await BlobCache.UserAccount.InsertObject("favoriteList", favoriteList);
         }

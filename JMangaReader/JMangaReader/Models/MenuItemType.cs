@@ -8,5 +8,6 @@
         History,
         Favorite,
         Settings,
+        Import
     }
 }
