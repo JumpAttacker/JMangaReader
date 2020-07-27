@@ -56,7 +56,7 @@ namespace JMangaReader.Views
                 {
                     var index = x.Name.IndexOf("<sup>", StringComparison.Ordinal);
                     var name = index > 0 ? x.Name.Remove(index) : x.Name;
-                    var manga = new Manga(name, x.Href.Replace("https://readmanga.me", ""), x.ImageUrl);
+                    var manga = new Manga(name, x.Href.Replace("https://readmanga.live", ""), x.ImageUrl);
                     var chapter = new Chapter("", x.LastChapterUrl, manga);
                     historyService.AddChapterToHistory(chapter);
                     return manga;

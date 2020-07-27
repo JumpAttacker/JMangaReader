@@ -38,7 +38,7 @@ namespace JMangaReader.ScrapperEngine
         public async Task<IList<IChapter>> LoadChaptersListAsync(bool firstTime = true,
             bool useSecondChapterUrl = false)
         {
-            var basePath = Url.StartsWith("/") ? "https://readmanga.me" : string.Empty;
+            var basePath = Url.StartsWith("/") ? "https://readmanga.live" : string.Empty;
             var client = new HttpClient();
             var finalUrl = basePath + Url + (useSecondChapterUrl ? PageUrl2 : PageUrl) +
                            (firstTime ? string.Empty : "?mtr=1");

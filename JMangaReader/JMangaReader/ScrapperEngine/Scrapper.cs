@@ -14,7 +14,7 @@ namespace JMangaReader.ScrapperEngine
 {
     public class ReadMangaScrapper : IScrapper
     {
-        private const string BaseUrl = "https://readmanga.me/";
+        private const string BaseUrl = "https://readmanga.live/";
         private WebView _webView;
         private readonly IHistory _historyService;
 
